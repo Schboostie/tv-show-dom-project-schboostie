@@ -105,11 +105,33 @@ function displaySearchCount(count) {
   searchCountElement.textContent = `Found ${count} episode(s)`;
 }
 
-// Function to initialize the page
-function initializePage() {
-  const allEpisodes = getAllEpisodes();
-  displayEpisodes(allEpisodes);
-  createSelectOptions(allEpisodes);
+// // Function to initialize the page
+// function initializePage() {
+//   const allEpisodes = getAllEpisodes();
+//   displayEpisodes(allEpisodes);
+//   createSelectOptions(allEpisodes);
+
+//   // Call the handleSearchInput() function whenever the search input changes
+//   const searchInput = document.getElementById("search-input");
+//   searchInput.addEventListener("input", handleSearchInput);
+
+//   // Call the handleSelectChange() function whenever the select option changes
+//   const episodeSelect = document.getElementById("episode-select");
+//   episodeSelect.addEventListener("change", handleSelectChange);
+// }
+
+// // Call the initializePage() function to populate the page with episodes
+// window.onload = initializePage;
+
+async function initializePage() {
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    const episodes = await response.json();
+    displayEpisodes(episodes);
+    createSelectOptions(episodes);
+  } catch (error) {
+    console.log("Error fetching episodes:", error);
+  }
 
   // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
@@ -120,28 +142,7 @@ function initializePage() {
   episodeSelect.addEventListener("change", handleSelectChange);
 }
 
-// Function to fetch episodes from TVMaze API
-async function fetchEpisodes() {
-  try {
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
-    const episodes = await response.json();
-    return episodes;
-  } catch (error) {
-    console.log("Error fetching episodes:", error);
-    return [];
-  }
-}
-
-// Function to initialize the page
-async function initializePage() {
-  const episodes = await fetchEpisodes();
-  displayEpisodes(episodes);
-  createSelectOptions(episodes);
-
-  // Call the handleSearchInput() function whenever the search input changes
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", handleSearchInput);
-}
+initializePage();
 
 // Call the initializePage() function to populate the page with episodes
 window.onload = initializePage;

@@ -120,28 +120,7 @@ function initializePage() {
   episodeSelect.addEventListener("change", handleSelectChange);
 }
 
-// Function to fetch episodes from TVMaze API
-async function fetchEpisodes() {
-  try {
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
-    const episodes = await response.json();
-    return episodes;
-  } catch (error) {
-    console.log("Error fetching episodes:", error);
-    return [];
-  }
-}
-
-// Function to initialize the page
-async function initializePage() {
-  const episodes = await fetchEpisodes();
-  displayEpisodes(episodes);
-  createSelectOptions(episodes);
-
-  // Call the handleSearchInput() function whenever the search input changes
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", handleSearchInput);
-}
+initializePage();
 
 // Call the initializePage() function to populate the page with episodes
 window.onload = initializePage;
