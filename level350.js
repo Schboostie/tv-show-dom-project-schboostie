@@ -123,16 +123,42 @@ function displaySearchCount(count) {
 // // Call the initializePage() function to populate the page with episodes
 // window.onload = initializePage;
 
-async function initializePage() {
+// async function initializePage() {
+//   try {
+//     const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+//     const episodes = await response.json();
+//     displayEpisodes(episodes);
+//     createSelectOptions(episodes);
+//   } catch (error) {
+//     console.log("Error fetching episodes:", error);
+//   }
+
+//   // Call the handleSearchInput() function whenever the search input changes
+//   const searchInput = document.getElementById("search-input");
+//   searchInput.addEventListener("input", handleSearchInput);
+
+//   // Call the handleSelectChange() function whenever the select option changes
+//   const episodeSelect = document.getElementById("episode-select");
+//   episodeSelect.addEventListener("change", handleSelectChange);
+// }
+
+// initializePage();
+
+// // Call the initializePage() function to populate the page with episodes
+// window.onload = initializePage;
+
+async function fetchEpisodes() {
   try {
     const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     const episodes = await response.json();
-    displayEpisodes(episodes);
-    createSelectOptions(episodes);
+    return episodes;
   } catch (error) {
     console.log("Error fetching episodes:", error);
+    return [];
   }
+}
 
+function initializeEventListeners() {
   // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
   searchInput.addEventListener("input", handleSearchInput);
@@ -142,7 +168,11 @@ async function initializePage() {
   episodeSelect.addEventListener("change", handleSelectChange);
 }
 
-initializePage();
+async function initializePage() {
+  const episodes = await fetchEpisodes();
+  displayEpisodes(episodes);
+  createSelectOptions(episodes);
+  initializeEventListeners();
+}
 
-// Call the initializePage() function to populate the page with episodes
-window.onload = initializePage;
+initializePage();
