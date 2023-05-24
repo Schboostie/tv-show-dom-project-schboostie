@@ -1,6 +1,3 @@
-// Assuming you have a function getAllEpisodes() that returns an array of episode objects
-let episodes = [];
-
 // Function to pad a number with leading zeros to two digits
 function padNumber(num) {
   return num.toString().padStart(2, "0");
@@ -44,46 +41,86 @@ function createEpisodeCard(episode) {
   return episodeCard;
 }
 
-// Function to display episodes based on search input
-function displayEpisodes(searchTerm) {
+// Function to display all episodes on the page
+function displayEpisodes(episodes) {
   const rootElement = document.getElementById("root");
-  rootElement.innerHTML = ""; // Clear the previous results
+  rootElement.innerHTML = ""; // Clear previous episodes
 
-  let matchingEpisodes;
-  if (searchTerm.trim() === "") {
-    matchingEpisodes = episodes; // Show all episodes if search box is cleared
-  } else {
-    const searchRegex = new RegExp(searchTerm, "i"); // Case-insensitive search regex
-    matchingEpisodes = episodes.filter(
-      (episode) =>
-        searchRegex.test(episode.name) || searchRegex.test(episode.summary)
-    );
-  }
-
-  matchingEpisodes.forEach((episode) => {
+  episodes.forEach((episode) => {
     const episodeCard = createEpisodeCard(episode);
     rootElement.appendChild(episodeCard);
   });
+}
 
-  const searchCount = document.getElementById("search-count");
-  searchCount.textContent = `Episodes found: ${matchingEpisodes.length}`;
+// Function to create select options for all episodes
+function createSelectOptions(episodes) {
+  const selectElement = document.getElementById("episode-select");
+
+  episodes.forEach((episode) => {
+    const option = document.createElement("option");
+    option.value = episode.id;
+    option.textContent = `${generateEpisodeCode(
+      episode.season,
+      episode.number
+    )} - ${episode.name}`;
+    selectElement.appendChild(option);
+  });
+}
+
+// Function to handle select change event
+function handleSelectChange() {
+  const selectElement = document.getElementById("episode-select");
+  const selectedEpisodeId = selectElement.value;
+
+  if (selectedEpisodeId) {
+    const selectedEpisode = getAllEpisodes().find(
+      (episode) => episode.id === parseInt(selectedEpisodeId)
+    );
+    displayEpisodes([selectedEpisode]);
+  } else {
+    const episodes = getAllEpisodes();
+    displayEpisodes(episodes);
+  }
 }
 
 // Function to handle search input changes
 function handleSearchInput() {
   const searchInput = document.getElementById("search-input");
   const searchTerm = searchInput.value.trim();
-  displayEpisodes(searchTerm);
+  const allEpisodes = getAllEpisodes();
+
+  const filteredEpisodes = allEpisodes.filter(
+    (episode) =>
+      episode.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      episode.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  displayEpisodes(filteredEpisodes);
+  displaySearchCount(filteredEpisodes.length);
 }
 
-// Function to initialize the app
-function initializeApp() {
+// Function to display the count of matching episodes
+function displaySearchCount(count) {
+  const searchCountElement = document.getElementById("search-count");
+  searchCountElement.textContent = `Found ${count} episode(s)`;
+}
+
+// Function to initialize the page
+function initializePage() {
+  const allEpisodes = getAllEpisodes();
+  displayEpisodes(allEpisodes);
+  createSelectOptions(allEpisodes);
+
+  // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
   searchInput.addEventListener("input", handleSearchInput);
 
-  episodes = getAllEpisodes(); // Fetch episodes from API or assign them manually
-  displayEpisodes("");
+  // Call the handleSelectChange() function whenever the select option changes
+  const episodeSelect = document.getElementById("episode-select");
+  episodeSelect.addEventListener("change", handleSelectChange);
 }
 
-// Call the initializeApp() function to populate the page with episodes and set up the search functionality
-initializeApp();
+initializePage();
+
+// Call the initializePage() function to populate the page with episodes
+window.onload = initializePage;
