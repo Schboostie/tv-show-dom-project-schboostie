@@ -105,29 +105,22 @@ function displaySearchCount(count) {
   searchCountElement.textContent = `Found ${count} episode(s)`;
 }
 
-async function fetchEpisodes() {
-  try {
-    const response = await fetch(
-      "https://api.tvmaze.com/shows/22036/episodes "
-    );
-    const episodes = await response.json();
-    return episodes;
-  } catch (error) {
-    console.log("Error fetching episodes:", error);
-    return [];
-  }
-}
-
 // Function to initialize the page
-async function initializePage() {
-  const episodes = await fetchEpisodes();
-  displayEpisodes(episodes);
-  createSelectOptions(episodes);
+function initializePage() {
+  const allEpisodes = getAllEpisodes();
+  displayEpisodes(allEpisodes);
+  createSelectOptions(allEpisodes);
 
   // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
   searchInput.addEventListener("input", handleSearchInput);
+
+  // Call the handleSelectChange() function whenever the select option changes
+  const episodeSelect = document.getElementById("episode-select");
+  episodeSelect.addEventListener("change", handleSelectChange);
 }
+
+initializePage();
 
 // Call the initializePage() function to populate the page with episodes
 window.onload = initializePage;
