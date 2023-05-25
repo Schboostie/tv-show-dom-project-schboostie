@@ -43,6 +43,8 @@ function createEpisodeCard(episode) {
 
 // Function to display all episodes on the page
 function displayEpisodes(episodes) {
+  console.log("inside displayEpisodes");
+  console.log(episodes);
   const rootElement = document.getElementById("root");
   rootElement.innerHTML = ""; // Clear previous episodes
 
@@ -68,28 +70,32 @@ function createSelectOptions(episodes) {
 }
 
 // Function to handle select change event
-function handleSelectChange() {
+function handleSelectChange(episodes) {
   const selectElement = document.getElementById("episode-select");
   const selectedEpisodeId = selectElement.value;
+  console.log("inside handleSelectChange");
+  console.log(episodes);
+  console.log("selectedEpisodeId", selectedEpisodeId);
 
   if (selectedEpisodeId) {
-    const selectedEpisode = getAllEpisodes().find(
+    const selectedEpisode = episodes.find(
       (episode) => episode.id === parseInt(selectedEpisodeId)
     );
     displayEpisodes([selectedEpisode]);
   } else {
-    const episodes = getAllEpisodes();
     displayEpisodes(episodes);
   }
 }
 
 // Function to handle search input changes
-function handleSearchInput() {
+function handleSearchInput(episodes) {
   const searchInput = document.getElementById("search-input");
   const searchTerm = searchInput.value.trim();
-  const allEpisodes = getAllEpisodes();
-
-  const filteredEpisodes = allEpisodes.filter(
+  console.log("search term", searchTerm);
+  // const allEpisodes = getAllEpisodes();
+  console.log("inside handleSearchInput");
+  console.log(episodes);
+  const filteredEpisodes = episodes.filter(
     (episode) =>
       episode.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
       episode.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -105,20 +111,20 @@ function displaySearchCount(count) {
   searchCountElement.textContent = `Found ${count} episode(s)`;
 }
 
-// Function to initialize the page
-function initializePage() {
-  const allEpisodes = getAllEpisodes();
-  displayEpisodes(allEpisodes);
-  createSelectOptions(allEpisodes);
+// Function to initialize the page - why do you have this function here if you fetch data below???
+// function initializePage() {
+//   const allEpisodes = getAllEpisodes();
+//   displayEpisodes(allEpisodes);
+//   createSelectOptions(allEpisodes);
 
-  // Call the handleSearchInput() function whenever the search input changes
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", handleSearchInput);
+// Call the handleSearchInput() function whenever the search input changes
+// const searchInput = document.getElementById("search-input");
+// searchInput.addEventListener("input", handleSearchInput);
 
-  // Call the handleSelectChange() function whenever the select option changes
-  const episodeSelect = document.getElementById("episode-select");
-  episodeSelect.addEventListener("change", handleSelectChange);
-}
+// Call the handleSelectChange() function whenever the select option changes
+// const episodeSelect = document.getElementById("episode-select");
+// episodeSelect.addEventListener("change", handleSelectChange);
+// }
 
 // Function to fetch episodes from TVMaze API
 async function fetchEpisodes() {
@@ -135,12 +141,17 @@ async function fetchEpisodes() {
 // Function to initialize the page
 async function initializePage() {
   const episodes = await fetchEpisodes();
+  console.log(episodes);
   displayEpisodes(episodes);
   createSelectOptions(episodes);
 
   // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", handleSearchInput);
+  searchInput.addEventListener("input", () => handleSearchInput(episodes));
+
+  // Call the handleSelectChange() function whenever the select option changes
+  const episodeSelect = document.getElementById("episode-select");
+  episodeSelect.addEventListener("change", () => handleSelectChange(episodes));
 }
 
 // Call the initializePage() function to populate the page with episodes
