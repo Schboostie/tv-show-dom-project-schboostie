@@ -30,7 +30,7 @@ function createEpisodeCard(episode) {
   episodeCard.appendChild(episodeImage);
 
   const episodeSummary = document.createElement("p");
-  episodeSummary.textContent = episode.summary;
+  episodeSummary.innerHTML = episode.summary; // Use innerHTML instead of textContent to preserve HTML tags in summary
   episodeCard.appendChild(episodeSummary);
 
   const episodeLink = document.createElement("a");
@@ -123,7 +123,7 @@ async function fetchEpisodesForShow(showId) {
 // Function to fetch all shows
 async function fetchAllShows() {
   try {
-    const response = await fetch("shows.js");
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     const shows = await response.json();
     return shows;
   } catch (error) {
