@@ -1,3 +1,70 @@
 #root {
   color: red;
 }
+#root {
+  color: red;
+}
+
+/* Center the episodes container */
+/* main container */
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* search input */
+input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  color: #444;
+  font-size: 18px;
+  outline: none;
+}
+
+/* episode count display */
+#episode-count {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* episode card */
+.episode-card {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+}
+
+/* episode image */
+.episode-card img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+/* episode title */
+.episode-card h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #444;
+}
+
+/* episode summary */
+.episode-card p {
+  margin: 10px 0 0;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.4;
+}

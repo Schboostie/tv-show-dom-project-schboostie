@@ -67,6 +67,21 @@ function createSelectOptions(episodes) {
   });
 }
 
+// Funtion to create select options for all shows
+function createSelectShows(episodes) {
+  const selectElement = document.getElementById("show-select");
+
+  episodes.forEach((show) => {
+    const option = document.createElement("option");
+    option.value = episode.id;
+    option.textContent = `${generateEpisodeCode(show.season, show.number)} - ${
+      show.name
+    }`;
+    selectElement.appendChild(option);
+  });
+}
+//
+
 // Function to handle select change event
 function handleSelectChange() {
   const selectElement = document.getElementById("episode-select");
@@ -171,8 +186,9 @@ function initializeEventListeners() {
 async function initializePage() {
   const episodes = await fetchEpisodes();
   displayEpisodes(episodes);
-  createSelectOptions(episodes);
+  createSelectShows(getAllShows());
   initializeEventListeners();
+  createSelectOptions(episodes);
 }
 
 initializePage();

@@ -187,4 +187,5 @@ async function initializePage() {
   showSelect.addEventListener("change", handleShowSelectChange);
 }
 
+getAllShows();
 initializePage();
