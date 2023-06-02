@@ -9,6 +9,12 @@
   </head>
 
   <body>
+    <div class="show-selector">
+      <label for="show-select">Jump to show:</label>
+      <select id="show-select">
+        <option value="">All Shows</option>
+      </select>
+    </div>
     <div class="search-bar">
       <input type="text" id="search-input" placeholder="Search episodes..." />
     </div>
@@ -22,19 +28,10 @@
       </select>
     </div>
 
-    <div class="show-selector">
-      <label for="show-select">Select a Show:</label>
-      <select id="show-select">
-        <!-- Show options will be dynamically added here -->
-      </select>
-    </div>
-
     <div id="root"></div>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <!-- <script src="episodes.js"></script> -->
-
     <!-- Loads YOUR JavaScript code -->
-    <script src="script.js"></script>
+    <script src="shows.js"></script>
+    <script src="level350.js"></script>
   </body>
 </html>

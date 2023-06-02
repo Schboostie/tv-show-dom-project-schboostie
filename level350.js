@@ -30,7 +30,7 @@ function createEpisodeCard(episode) {
   episodeCard.appendChild(episodeImage);
 
   const episodeSummary = document.createElement("p");
-  episodeSummary.innerHTML = episode.summary; // Use innerHTML instead of textContent to preserve HTML tags in summary
+  episodeSummary.textContent = episode.summary;
   episodeCard.appendChild(episodeSummary);
 
   const episodeLink = document.createElement("a");
@@ -67,6 +67,21 @@ function createSelectOptions(episodes) {
   });
 }
 
+// Funtion to create select options for all shows
+function createSelectShows(episodes) {
+  const selectElement = document.getElementById("show-select");
+
+  episodes.forEach((show) => {
+    const option = document.createElement("option");
+    option.value = episode.id;
+    option.textContent = `${generateEpisodeCode(show.season, show.number)} - ${
+      show.name
+    }`;
+    selectElement.appendChild(option);
+  });
+}
+//
+
 // Function to handle select change event
 function handleSelectChange() {
   const selectElement = document.getElementById("episode-select");
@@ -86,13 +101,13 @@ function handleSelectChange() {
 // Function to handle search input changes
 function handleSearchInput() {
   const searchInput = document.getElementById("search-input");
-  const searchTerm = searchInput.value.trim().toLowerCase();
+  const searchTerm = searchInput.value.trim();
   const allEpisodes = getAllEpisodes();
 
   const filteredEpisodes = allEpisodes.filter(
     (episode) =>
-      episode.summary.toLowerCase().includes(searchTerm) ||
-      episode.name.toLowerCase().includes(searchTerm)
+      episode.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      episode.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   displayEpisodes(filteredEpisodes);
@@ -105,13 +120,51 @@ function displaySearchCount(count) {
   searchCountElement.textContent = `Found ${count} episode(s)`;
 }
 
-////////////////////////////////////
-// Function to fetch episodes for a specific show
-async function fetchEpisodesForShow(showId) {
+// // Function to initialize the page
+// function initializePage() {
+//   const allEpisodes = getAllEpisodes();
+//   displayEpisodes(allEpisodes);
+//   createSelectOptions(allEpisodes);
+
+//   // Call the handleSearchInput() function whenever the search input changes
+//   const searchInput = document.getElementById("search-input");
+//   searchInput.addEventListener("input", handleSearchInput);
+
+//   // Call the handleSelectChange() function whenever the select option changes
+//   const episodeSelect = document.getElementById("episode-select");
+//   episodeSelect.addEventListener("change", handleSelectChange);
+// }
+
+// // Call the initializePage() function to populate the page with episodes
+// window.onload = initializePage;
+
+// async function initializePage() {
+//   try {
+//     const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+//     const episodes = await response.json();
+//     displayEpisodes(episodes);
+//     createSelectOptions(episodes);
+//   } catch (error) {
+//     console.log("Error fetching episodes:", error);
+//   }
+
+//   // Call the handleSearchInput() function whenever the search input changes
+//   const searchInput = document.getElementById("search-input");
+//   searchInput.addEventListener("input", handleSearchInput);
+
+//   // Call the handleSelectChange() function whenever the select option changes
+//   const episodeSelect = document.getElementById("episode-select");
+//   episodeSelect.addEventListener("change", handleSelectChange);
+// }
+
+// initializePage();
+
+// // Call the initializePage() function to populate the page with episodes
+// window.onload = initializePage;
+
+async function fetchEpisodes() {
   try {
-    const response = await fetch(
-      `https://api.tvmaze.com/shows/${showId}/episodes`
-    );
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     const episodes = await response.json();
     return episodes;
   } catch (error) {
@@ -120,72 +173,22 @@ async function fetchEpisodesForShow(showId) {
   }
 }
 
-// Function to fetch all shows
-async function fetchAllShows() {
-  try {
-    const response = await fetch("shows.js");
-    const shows = await response.json();
-    return shows;
-  } catch (error) {
-    console.log("Error fetching shows:", error);
-    return [];
-  }
-}
-
-// Function to populate the show select options
-function populateShowSelectOptions(shows) {
-  const showSelect = document.getElementById("show-select");
-
-  shows.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  ); // Sort shows alphabetically, case-insensitive
-
-  shows.forEach((show) => {
-    const option = document.createElement("option");
-    option.value = show.id;
-    option.textContent = show.name;
-    showSelect.appendChild(option);
-  });
-}
-
-// Function to handle show select change event
-async function handleShowSelectChange() {
-  const showSelect = document.getElementById("show-select");
-  const selectedShowId = showSelect.value;
-
-  if (selectedShowId) {
-    const episodes = await fetchEpisodesForShow(selectedShowId);
-    displayEpisodes(episodes);
-    createSelectOptions(episodes);
-  } else {
-    const allEpisodes = getAllEpisodes();
-    displayEpisodes(allEpisodes);
-    createSelectOptions(allEpisodes);
-  }
-}
-
-// Function to initialize the page
-async function initializePage() {
-  const allEpisodes = getAllEpisodes();
-  displayEpisodes(allEpisodes);
-  createSelectOptions(allEpisodes);
-
-  // Fetch all shows and populate the show select options
-  const shows = await fetchAllShows();
-  populateShowSelectOptions(shows);
-
+function initializeEventListeners() {
   // Call the handleSearchInput() function whenever the search input changes
   const searchInput = document.getElementById("search-input");
   searchInput.addEventListener("input", handleSearchInput);
 
-  // Call the handleSelectChange() function whenever the episode select option changes
+  // Call the handleSelectChange() function whenever the select option changes
   const episodeSelect = document.getElementById("episode-select");
   episodeSelect.addEventListener("change", handleSelectChange);
-
-  // Call the handleShowSelectChange() function whenever the show select option changes
-  const showSelect = document.getElementById("show-select");
-  showSelect.addEventListener("change", handleShowSelectChange);
 }
 
-getAllShows();
+async function initializePage() {
+  const episodes = await fetchEpisodes();
+  displayEpisodes(episodes);
+  createSelectShows(getAllShows());
+  initializeEventListeners();
+  createSelectOptions(episodes);
+}
+
 initializePage();

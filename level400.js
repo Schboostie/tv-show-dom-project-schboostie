@@ -123,7 +123,7 @@ async function fetchEpisodesForShow(showId) {
 // Function to fetch all shows
 async function fetchAllShows() {
   try {
-    const response = await fetch("shows.js");
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
     const shows = await response.json();
     return shows;
   } catch (error) {
@@ -187,5 +187,4 @@ async function initializePage() {
   showSelect.addEventListener("change", handleShowSelectChange);
 }
 
-getAllShows();
 initializePage();
